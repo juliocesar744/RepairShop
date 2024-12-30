@@ -7,5 +7,4 @@
 <li>Styling: Tailwind CSS and ShadCN/ui</li>
 <li>Database: Neon Postgres with Drizzle ORM</li>
 <li>Authentication: Kinde Auth</li>
-<li>Error Tracking: Sentry</li>
 </ul>
