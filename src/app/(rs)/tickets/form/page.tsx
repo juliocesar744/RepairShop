@@ -1,6 +1,7 @@
 import { getCustomer } from "@/lib/queries/getCustomer";
 import { getTicket } from "@/lib/queries/getTicket";
 import { BackButton } from "@/components/BackButton";
+import TicketForm from "@/app/(rs)/tickets/form/TicketForm"
 
 export default async function TicketFormPage({
     searchParams,
@@ -40,6 +41,8 @@ export default async function TicketFormPage({
                     </>
                 )
             }
+
+            return <TicketForm customer={customer} />
         }
 
         if (ticketId) {
@@ -56,7 +59,7 @@ export default async function TicketFormPage({
 
             const customer = await getCustomer(ticket.customerId)
 
-            
+            return <TicketForm customer={customer} ticket={ticket} />
         }
 
     } catch (e) {
