@@ -62,5 +62,8 @@ export const saveCustomerAction = actionClient
         .where(eq(customers.id, customer.id!))
         .returning({ updatedId: customers.id })
 
-        return { message: `Customer ID#${result[0].updatedId} updated sucessfully`}
+        return { 
+            message: `Customer ID#${result[0].updatedId} updated sucessfully`, 
+            active: customer.active
+        }
     }) 
