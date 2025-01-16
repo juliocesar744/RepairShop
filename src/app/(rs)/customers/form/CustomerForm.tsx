@@ -19,6 +19,11 @@ import {
 } 
 from "@/zod-schemas/customer"   
 
+import { useAction } from "next-safe-action/hooks"
+import { saveCustomerAction } from "@/app/actions/saveCustomerAction"
+import { useToast } from "@/hooks/use-toast"  
+import { LoaderCircle } from "lucide-react"
+
 import { StatesArray } from "@/constants/StatesArray"
 
 type Props = {
@@ -28,6 +33,8 @@ type Props = {
 export default function CustomerForm({ customer }: Props) {
     const { getPermission, getPermissions, isLoading } = useKindeBrowserClient()
     const isManager = !isLoading && getPermission('manager')?.isGranted
+
+    const { toast } = useToast()
 
     const defaultValues: insertCustomerSchemaType = {
         id: customer?.id ?? 0,
@@ -50,7 +57,30 @@ export default function CustomerForm({ customer }: Props) {
         defaultValues,
     })
 
+    const {
+        execute: executeSave,
+        result: saveResult,
+        isExecuting: isSaving,
+        reset: resetSaveAction,
+    } = useAction(saveCustomerAction, {
+        onSuccess({ data }) {
+            toast({
+                variant: "default",
+                title: "Success!",
+                description: data?.message,
+            })
+        },
+        onError({ error }) {
+            toast({
+                variant: "destructive",
+                title: "Error!",
+                description: "Save Failed",
+            })
+        }
+    })
+
     async function submitForm(data: insertCustomerSchemaType) {
+        executeSave(data)
     }
 
     return (
@@ -129,15 +159,23 @@ export default function CustomerForm({ customer }: Props) {
                                 type="submit"
                                 className="w-3/4"
                                 variant="default"
-                                title="Save"    
+                                title="Save"
+                                disabled={isSaving}
                             >
-                                Save
+                                {isSaving ? (
+                                    <>
+                                        <LoaderCircle className="animate-spin"/> Saving
+                                    </>
+                                ) : "Save"}
                             </Button>
                             <Button
                                 type="button"
                                 variant="destructive"
                                 title="Reset"
-                                onClick={() => form.reset(defaultValues)}    
+                                onClick={() => {
+                                    form.reset(defaultValues)
+                                    resetSaveAction()
+                                }}    
                             >
                                 Reset
                             </Button>
