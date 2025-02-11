@@ -23,6 +23,7 @@ import { useAction } from "next-safe-action/hooks"
 import { saveCustomerAction } from "@/app/actions/saveCustomerAction"
 import { useToast } from "@/hooks/use-toast"  
 import { LoaderCircle } from "lucide-react"
+import { DisplayServerActionResponse } from "@/components/DisplayServerActionResponse"
 
 import { StatesArray } from "@/constants/StatesArray"
 
@@ -85,6 +86,7 @@ export default function CustomerForm({ customer }: Props) {
 
     return (
         <div className="flex flex-col gap-1 sm:px-8">
+            <DisplayServerActionResponse result={saveResult} />
             <div>
                 <h2 className="text-2xl font-bold">
                     {customer?.id ? "Edit" : "New"} Customer {customer?.id ? `#${customer.id}` : "Form"}
